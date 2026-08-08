@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  nombre          String
+  password        String
+  rol             String    @default("user") // user | admin
+  logoUrl         String?
+  subscriptionEnd DateTime?
+  computos        Computo[]
+  createdAt       DateTime  @default(now())
+}
+
+model Computo {
+  id                 String         @id @default(cuid())
+  nombre             String
+  superficieM2       Float?
+  ggPct              Float          @default(15)
+  beneficioPct       Float          @default(10)
+  ivaPct             Float          @default(10.5)
+  esModelo           Boolean        @default(false)
+  modeloSuperficieM2 Float?
+  modeloDormitorios  Int?
+  modeloBanos        Int?
+  modeloToilettes    Int?
+  modeloImgUrl       String?
+  modeloPlanoUrl     String?
+  modeloMemoria      String?        @db.Text
+  indiceId           String?
+  indice             Indice?        @relation(fields: [indiceId], references: [id])
+  usuarioId          String?
+  usuario            Usuario?       @relation(fields: [usuarioId], references: [id])
+  etapas             EtapaComputo[]
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+}
+
+model EtapaComputo {
+  id        String        @id @default(cuid())
+  nombre    String
+  orden     Int
+  computoId String
+  computo   Computo       @relation(fields: [computoId], references: [id], onDelete: Cascade)
+  items     ItemComputo[]
+}
+
+model ItemComputo {
+  id              String       @id @default(cuid())
+  codigo          String?
+  descripcion     String
+  unidad          String
+  cantidad        Float
+  orden           Int
+  esPersonalizado Boolean      @default(false)
+  tareaId         String?
+  tarea           Tarea?       @relation(fields: [tareaId], references: [id])
+  etapaId         String
+  etapa           EtapaComputo @relation(fields: [etapaId], references: [id], onDelete: Cascade)
+}
+
+model Material {
+  id          String       @id @default(cuid())
+  codigo      String?
+  nombre      String
+  categoria   String
+  unidad      String
+  precioBase  Float
+  fechaPrecio DateTime     @default(now())
+  activo      Boolean      @default(true)
+  itemsAPU    APURecurso[]
+}
+
+model Tarea {
+  id            String        @id @default(cuid())
+  codigo        String?
+  descripcion   String
+  etapaNombre   String
+  unidad        String
+  activo        Boolean       @default(true)
+  itemsComputo  ItemComputo[]
+  recursosAPU   APURecurso[]
+}
+
+model APURecurso {
+  id                 String  @id @default(cuid())
+  rendimiento        Float
+  tipo               String // material | mano_de_obra | equipo | subcontrato
+  tareaId            String
+  tarea              Tarea   @relation(fields: [tareaId], references: [id])
+  materialId         String?
+  material           Material? @relation(fields: [materialId], references: [id])
+  recursoLibreNombre String?
+  recursoLibreUnidad String?
+  recursoLibrePrecio Float?
+}
+
+model RecursoUOCRA {
+  id            String   @id @default(cuid())
+  categoria     String
+  zona          String
+  especialidad  String
+  jornalHora    Float
+  jornalDia     Float
+  vigenciaDesde DateTime
+}
+
+model FactorK {
+  id            String   @id @default(cuid())
+  valor         Float    @default(3.0)
+  descripcion   String?
+  vigenciaDesde DateTime
+}
+
+model Indice {
+  id                  String    @id @default(cuid())
+  nombre              String
+  fuente              String // CAC | INDEC | ICC | Manual
+  valor               Float
+  variacionMensualPct Float?
+  fechaVigencia       DateTime
+  computos            Computo[]
+}
+
+model Tutorial {
+  id          String  @id @default(cuid())
+  titulo      String
+  descripcion String
+  youtubeId   String
+  orden       Int
+  activo      Boolean @default(true)
+}
+
+model PlanCalculadora {
+  id            String @id @default(cuid())
+  tipoTrabajo   String
+  materialId    String
+  cantidadPorM2 Float
+}
