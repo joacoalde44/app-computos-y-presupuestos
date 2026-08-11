@@ -81,6 +81,93 @@ export type ComputoEtapa = {
   subtotal: number;
 };
 
+export type ComputoListItem = {
+  id: string;
+  nombre: string;
+  superficieM2: number | null;
+  etapasCount: number;
+  total: number;
+  updatedAt: string;
+};
+
+export type ItemDetalle = {
+  id: string;
+  codigo: string | null;
+  descripcion: string;
+  unidad: string;
+  cantidad: number;
+  orden: number;
+  esPersonalizado: boolean;
+  tareaId: string | null;
+  precioUnitario: number;
+  total: number;
+  desglose: { material: number; mano_de_obra: number; equipo: number; subcontrato: number };
+};
+
+export type EtapaDetalle = {
+  id: string;
+  nombre: string;
+  orden: number;
+  items: ItemDetalle[];
+  subtotal: number;
+};
+
+export type ComputoDetalle = {
+  id: string;
+  nombre: string;
+  superficieM2: number | null;
+  ggPct: number;
+  beneficioPct: number;
+  ivaPct: number;
+  createdAt: string;
+  updatedAt: string;
+  etapas: EtapaDetalle[];
+  resumen: {
+    subtotal: number;
+    ggPct: number;
+    gg: number;
+    beneficioPct: number;
+    beneficio: number;
+    ivaPct: number;
+    iva: number;
+    total: number;
+  };
+};
+
+export type TareaBusqueda = {
+  id: string;
+  codigo: string | null;
+  descripcion: string;
+  etapa: string;
+  unidad: string;
+  precio: number;
+};
+
+export type TareaAPU = {
+  id: string;
+  codigo: string | null;
+  descripcion: string;
+  etapa: string;
+  unidad: string;
+  recursos: {
+    id: string;
+    tipo: string;
+    nombre: string;
+    unidad: string;
+    rendimiento: number;
+    precioUnitario: number;
+    parcial: number;
+  }[];
+  subtotales: { material: number; mano_de_obra: number; equipo: number; subcontrato: number };
+  precioUnitario: number;
+};
+
+export type IncidenciaData = {
+  total: number;
+  porEtapa: { etapa: string; subtotal: number; pct: number }[];
+  porTipo: { tipo: string; subtotal: number; pct: number }[];
+};
+
 export type ComputoModeloDetalle = {
   id: string;
   nombre: string;
