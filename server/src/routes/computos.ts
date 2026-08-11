@@ -5,6 +5,8 @@ import { requireAuth, requireSubscription } from "../middleware/auth";
 import { asyncHandler } from "../utils/asyncHandler";
 import { calcularEtapa, calcularResumen } from "../utils/computoCalc";
 import { desglosePorTipo } from "../utils/apu";
+import { generarExcelComputo } from "../utils/exportExcel";
+import { generarPdfComputo } from "../utils/exportPdf";
 
 const router = Router();
 
@@ -111,6 +113,44 @@ router.get(
     });
     if (!computo) return res.status(404).json({ error: "Computo no encontrado" });
     res.json(buildDetalle(computo));
+  })
+);
+
+// GET /api/computos/:id/export/excel
+router.get(
+  "/:id/export/excel",
+  asyncHandler(async (req, res) => {
+    const computo = await prisma.computo.findFirst({
+      where: { id: req.params.id, usuarioId: req.userId, esModelo: false },
+      include: { etapas: { include: { items: { include: ITEM_INCLUDE } } } },
+    });
+    if (!computo) return res.status(404).json({ error: "Computo no encontrado" });
+
+    const buffer = await generarExcelComputo(computo);
+    const nombreArchivo = computo.nombre.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", `attachment; filename="${nombreArchivo}.xlsx"`);
+    res.send(buffer);
+  })
+);
+
+// GET /api/computos/:id/export/pdf
+router.get(
+  "/:id/export/pdf",
+  asyncHandler(async (req, res) => {
+    const computo = await prisma.computo.findFirst({
+      where: { id: req.params.id, usuarioId: req.userId, esModelo: false },
+      include: { etapas: { include: { items: { include: ITEM_INCLUDE } } } },
+    });
+    if (!computo) return res.status(404).json({ error: "Computo no encontrado" });
+
+    const usuario = await prisma.usuario.findUnique({ where: { id: req.userId } });
+
+    const buffer = await generarPdfComputo(computo, usuario?.logoUrl);
+    const nombreArchivo = computo.nombre.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="${nombreArchivo}.pdf"`);
+    res.send(buffer);
   })
 );
 

@@ -22,6 +22,7 @@ export default function UsuarioComputoDetalle() {
   const [superficie, setSuperficie] = useState("");
   const [modelos, setModelos] = useState<ModeloVivienda[] | null>(null);
   const [mostrarIncidencia, setMostrarIncidencia] = useState(false);
+  const [exportando, setExportando] = useState<"pdf" | "excel" | null>(null);
 
   function cargar() {
     if (!id) return;
@@ -159,6 +160,31 @@ export default function UsuarioComputoDetalle() {
     }
   }
 
+  async function handleExportar(formato: "pdf" | "excel") {
+    if (!id || !computo) return;
+    if (computo.etapas.length === 0) {
+      toast.error("Agregá al menos una etapa antes de exportar");
+      return;
+    }
+    setExportando(formato);
+    try {
+      const r = await api.get(`/computos/${id}/export/${formato}`, { responseType: "blob" });
+      const ext = formato === "pdf" ? "pdf" : "xlsx";
+      const url = window.URL.createObjectURL(new Blob([r.data]));
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${computo.nombre.replace(/[^a-z0-9]+/gi, "-").toLowerCase()}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch {
+      toast.error(`No se pudo generar el ${formato === "pdf" ? "PDF" : "Excel"}`);
+    } finally {
+      setExportando(null);
+    }
+  }
+
   if (!computo) {
     return (
       <div className="mx-auto max-w-5xl px-4 py-12 lg:px-8">
@@ -181,16 +207,18 @@ export default function UsuarioComputoDetalle() {
         />
         <div className="flex gap-2">
           <button
-            onClick={() => toast("Función disponible próximamente", { icon: "🚧" })}
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+            onClick={() => handleExportar("pdf")}
+            disabled={exportando !== null}
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
           >
-            Imprimir PDF
+            {exportando === "pdf" ? "Generando..." : "Imprimir PDF"}
           </button>
           <button
-            onClick={() => toast("Función disponible próximamente", { icon: "🚧" })}
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
+            onClick={() => handleExportar("excel")}
+            disabled={exportando !== null}
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
           >
-            Excel
+            {exportando === "excel" ? "Generando..." : "Excel"}
           </button>
         </div>
       </div>
