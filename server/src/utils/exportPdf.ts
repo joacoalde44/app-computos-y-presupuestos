@@ -1,12 +1,5 @@
+import puppeteer from "puppeteer-core";
 import { construirHtmlComputo } from "./pdfTemplate";
-
-// TypeScript reescribe `import()` dinamico a `require()` cuando el target es CommonJS,
-// lo cual rompe con paquetes ESM-only como puppeteer-core. Este truco (Function
-// constructor) evita que tsc toque el import y preserva un import() dinamico real.
-const importDinamico: (specifier: string) => Promise<any> = new Function(
-  "specifier",
-  "return import(specifier)"
-) as any;
 
 async function resolverExecutablePath(): Promise<string> {
   if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
@@ -45,7 +38,6 @@ export async function generarPdfComputo(computo: any, logoUrl?: string | null): 
     args = chromium.args;
   }
 
-  const puppeteer = (await importDinamico("puppeteer-core")).default;
   const browser = await puppeteer.launch({
     executablePath,
     args,
