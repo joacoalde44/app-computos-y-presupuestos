@@ -152,6 +152,7 @@ export type TareaAPU = {
   recursos: {
     id: string;
     tipo: string;
+    materialId: string | null;
     nombre: string;
     unidad: string;
     rendimiento: number;

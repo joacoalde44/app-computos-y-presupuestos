@@ -90,6 +90,7 @@ tareasRouter.get(
     const recursos = tarea.recursosAPU.map((r) => ({
       id: r.id,
       tipo: r.tipo,
+      materialId: r.materialId,
       nombre: r.material?.nombre ?? r.recursoLibreNombre ?? "",
       unidad: r.material?.unidad ?? r.recursoLibreUnidad ?? "",
       rendimiento: r.rendimiento,

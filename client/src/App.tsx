@@ -16,6 +16,14 @@ import UsuarioComputo from "./pages/UsuarioComputo";
 import UsuarioComputoDetalle from "./pages/UsuarioComputoDetalle";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminMateriales from "./pages/admin/AdminMateriales";
+import AdminTareas from "./pages/admin/AdminTareas";
+import AdminUocra from "./pages/admin/AdminUocra";
+import AdminIndices from "./pages/admin/AdminIndices";
+import AdminModelos from "./pages/admin/AdminModelos";
+import AdminTutoriales from "./pages/admin/AdminTutoriales";
 
 export default function App() {
   return (
@@ -51,6 +59,23 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route index element={<AdminMateriales />} />
+          <Route path="materiales" element={<AdminMateriales />} />
+          <Route path="tareas" element={<AdminTareas />} />
+          <Route path="uocra" element={<AdminUocra />} />
+          <Route path="indices" element={<AdminIndices />} />
+          <Route path="modelos" element={<AdminModelos />} />
+          <Route path="tutoriales" element={<AdminTutoriales />} />
+        </Route>
 
         <Route path="*" element={<NotFound />} />
       </Route>

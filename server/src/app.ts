@@ -7,6 +7,7 @@ import publicRouter from "./routes/public";
 import calculadoraRouter from "./routes/calculadora";
 import computosRouter, { etapasRouter, itemsRouter } from "./routes/computos";
 import { materialesRouter, tareasRouter } from "./routes/catalogo";
+import adminRouter from "./routes/admin";
 
 const app = express();
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
@@ -25,6 +26,7 @@ app.use("/api/etapas", etapasRouter);
 app.use("/api/items", itemsRouter);
 app.use("/api/materiales", materialesRouter);
 app.use("/api/tareas", tareasRouter);
+app.use("/api/admin", adminRouter);
 
 app.use((_req, res) => {
   res.status(404).json({ error: "No encontrado" });

@@ -56,6 +56,15 @@ export default function Header() {
                   >
                     Mi cómputo
                   </Link>
+                  {usuario.rol === "admin" && (
+                    <Link
+                      to="/admin"
+                      className="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Panel admin
+                    </Link>
+                  )}
                   <button
                     onClick={() => {
                       setMenuOpen(false);
