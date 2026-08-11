@@ -1,4 +1,3 @@
-import puppeteer from "puppeteer-core";
 import { construirHtmlComputo } from "./pdfTemplate";
 
 async function resolverExecutablePath(): Promise<string> {
@@ -38,6 +37,7 @@ export async function generarPdfComputo(computo: any, logoUrl?: string | null): 
     args = chromium.args;
   }
 
+  const puppeteer = (await import("puppeteer-core")).default;
   const browser = await puppeteer.launch({
     executablePath,
     args,
