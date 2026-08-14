@@ -3,9 +3,22 @@ import { useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import { api } from "../lib/api";
 import toast from "react-hot-toast";
+import NavDropdown from "./NavDropdown";
 
 const navLink = ({ isActive }: { isActive: boolean }) =>
   `text-sm font-medium transition-colors ${isActive ? "text-brand-600" : "text-slate-600 hover:text-brand-600"}`;
+
+const COSTOS_ITEMS = [
+  { label: "Materiales", to: "/costos/materiales" },
+  { label: "Mano de obra", to: "/costos/mano-de-obra" },
+  { label: "Índice de costos", to: "/costos/indices-de-costos" },
+];
+
+const HERRAMIENTAS_ITEMS = [
+  { label: "Calculadora de materiales", to: "/calculadora-de-materiales" },
+  { label: "Calculadora de mano de obra", to: "/calculadora-de-costos-uocra" },
+  { label: "Detalles constructivos", to: "/detalles-constructivos" },
+];
 
 export default function Header() {
   const { usuario, clear } = useAuthStore();
@@ -30,11 +43,9 @@ export default function Header() {
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
-          <NavLink to="/costos/materiales" className={navLink}>Materiales</NavLink>
-          <NavLink to="/costos/mano-de-obra" className={navLink}>Mano de obra</NavLink>
-          <NavLink to="/costos/indices-de-costos" className={navLink}>Índices</NavLink>
-          <NavLink to="/calculadora-de-materiales" className={navLink}>Calculadoras</NavLink>
-          <NavLink to="/detalles-constructivos" className={navLink}>Detalles constructivos</NavLink>
+          <NavDropdown label="Costos" items={COSTOS_ITEMS} />
+          <NavDropdown label="Herramientas" items={HERRAMIENTAS_ITEMS} />
+          <NavLink to="/usuarios/computo" className={navLink}>Proyectos</NavLink>
           <NavLink to="/usuarios/tutoriales" className={navLink}>Tutoriales</NavLink>
         </nav>
 
