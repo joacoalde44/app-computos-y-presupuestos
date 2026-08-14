@@ -272,7 +272,7 @@ export default function UsuarioComputoDetalle() {
 
       <div className="mt-6 space-y-3">
         {computo.etapas.map((etapa) => (
-          <div key={etapa.id} className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <div key={etapa.id} className="rounded-xl border border-slate-200 bg-white shadow-sm">
             <div className="flex items-center justify-between px-4 py-3">
               <button onClick={() => toggleEtapa(etapa.id)} className="flex flex-1 items-center gap-2 text-left">
                 <span className="text-slate-400">{abiertas.has(etapa.id) ? "▲" : "▼"}</span>

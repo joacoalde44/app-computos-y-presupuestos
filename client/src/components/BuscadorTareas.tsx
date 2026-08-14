@@ -87,7 +87,7 @@ export default function BuscadorTareas({
       </div>
 
       {resultados && (
-        <div className="absolute z-10 mt-1 w-full rounded-lg border border-slate-200 bg-white shadow-lg">
+        <div className="absolute z-20 mt-1 max-h-72 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-lg">
           {resultados.length === 0 && (
             <p className="px-3 py-2 text-sm text-slate-500">Sin resultados.</p>
           )}
