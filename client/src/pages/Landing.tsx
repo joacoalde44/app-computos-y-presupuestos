@@ -27,8 +27,8 @@ export default function Landing() {
   useEffect(() => {
     api.get("/public/costos-resumen").then((r) => setResumen(r.data));
     api.get("/public/modelos").then((r) => setModelos(r.data));
-    api.get("/public/materiales?limit=6").then((r) => setMateriales(r.data));
-    api.get("/public/tareas?limit=6").then((r) => setTareas(r.data));
+    api.get("/public/materiales?limit=6").then((r) => setMateriales(r.data.items));
+    api.get("/public/tareas?limit=6").then((r) => setTareas(r.data.items));
   }, []);
 
   useEffect(() => {

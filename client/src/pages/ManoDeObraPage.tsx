@@ -8,11 +8,15 @@ import type { TareaMuestra } from "../types";
 
 export default function ManoDeObraPage() {
   const [tareas, setTareas] = useState<TareaMuestra[] | null>(null);
+  const [total, setTotal] = useState(0);
   const [query, setQuery] = useState("");
   const usuario = useAuthStore((s) => s.usuario);
 
   useEffect(() => {
-    api.get("/public/tareas?limit=50").then((r) => setTareas(r.data));
+    api.get("/public/tareas?limit=50").then((r) => {
+      setTareas(r.data.items);
+      setTotal(r.data.total);
+    });
   }, []);
 
   const filtradas = (tareas ?? []).filter((t) =>
@@ -31,6 +35,12 @@ export default function ManoDeObraPage() {
         onChange={(e) => setQuery(e.target.value)}
         className="mt-6 w-full max-w-sm rounded-lg border border-slate-300 px-4 py-2 text-sm"
       />
+
+      {tareas && total > tareas.length && (
+        <p className="mt-3 text-sm text-slate-500">
+          Mostrando {tareas.length} de {total} tareas.
+        </p>
+      )}
 
       <div className="mt-6 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-sm">
@@ -65,7 +75,9 @@ export default function ManoDeObraPage() {
       {!usuario?.suscripto && (
         <div className="mt-8 rounded-xl border border-brand-200 bg-brand-50 p-6 text-center">
           <p className="font-semibold text-brand-800">Este es solo un adelanto del catálogo.</p>
-          <p className="mt-1 text-sm text-brand-700">Con una suscripción activa accedés a más de 300 tareas con su análisis de precio unitario (APU).</p>
+          <p className="mt-1 text-sm text-brand-700">
+            Suscribite para ver la lista completa de {total > 0 ? `las ${total} tareas` : "tareas"} con su análisis de precio unitario (APU).
+          </p>
           <Link to="/suscribirse" className="mt-4 inline-block rounded-lg bg-brand-600 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-700">
             Ver planes
           </Link>

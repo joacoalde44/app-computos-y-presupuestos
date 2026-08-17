@@ -188,21 +188,25 @@ router.get(
   "/materiales",
   asyncHandler(async (req, res) => {
     const limit = Math.min(Number(req.query.limit) || 6, 50);
-    const materiales = await prisma.material.findMany({
-      where: { activo: true },
-      take: limit,
-      orderBy: { nombre: "asc" },
-    });
-    res.json(
-      materiales.map((m) => ({
+    const [materiales, total] = await Promise.all([
+      prisma.material.findMany({
+        where: { activo: true },
+        take: limit,
+        orderBy: { nombre: "asc" },
+      }),
+      prisma.material.count({ where: { activo: true } }),
+    ]);
+    res.json({
+      total,
+      items: materiales.map((m) => ({
         id: m.id,
         codigo: m.codigo,
         nombre: m.nombre,
         categoria: m.categoria,
         unidad: m.unidad,
         precio: m.precioBase,
-      }))
-    );
+      })),
+    });
   })
 );
 
@@ -211,14 +215,18 @@ router.get(
   "/tareas",
   asyncHandler(async (req, res) => {
     const limit = Math.min(Number(req.query.limit) || 6, 50);
-    const tareas = await prisma.tarea.findMany({
-      where: { activo: true },
-      take: limit,
-      orderBy: { descripcion: "asc" },
-      include: { recursosAPU: { include: { material: true } } },
-    });
-    res.json(
-      tareas.map((t) => {
+    const [tareas, total] = await Promise.all([
+      prisma.tarea.findMany({
+        where: { activo: true },
+        take: limit,
+        orderBy: { descripcion: "asc" },
+        include: { recursosAPU: { include: { material: true } } },
+      }),
+      prisma.tarea.count({ where: { activo: true } }),
+    ]);
+    res.json({
+      total,
+      items: tareas.map((t) => {
         const desglose = desglosePorTipo(t.recursosAPU as any);
         const precio = desglose.material + desglose.mano_de_obra + desglose.equipo + desglose.subcontrato;
         return {
@@ -229,8 +237,8 @@ router.get(
           unidad: t.unidad,
           precio: Math.round(precio),
         };
-      })
-    );
+      }),
+    });
   })
 );
 
