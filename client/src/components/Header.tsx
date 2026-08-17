@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import NavDropdown from "./NavDropdown";
 
 const navLink = ({ isActive }: { isActive: boolean }) =>
-  `text-sm font-medium transition-colors ${isActive ? "text-brand-600" : "text-slate-600 hover:text-brand-600"}`;
+  `text-sm font-medium transition-colors ${isActive ? "text-brand-500" : "text-slate-300 hover:text-brand-500"}`;
 
 const COSTOS_ITEMS = [
   { label: "Materiales", to: "/costos/materiales" },
@@ -35,9 +35,9 @@ export default function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-navy-800 bg-navy-900/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 lg:px-8">
-        <Link to="/" className="flex items-center gap-2 text-lg font-bold text-slate-900">
+        <Link to="/" className="flex items-center gap-2 text-lg font-bold text-white">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white">CP</span>
           Cómputo &amp; Presupuesto
         </Link>
@@ -54,7 +54,7 @@ export default function Header() {
             <div className="relative">
               <button
                 onClick={() => setMenuOpen((v) => !v)}
-                className="flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-200"
+                className="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-medium text-white hover:bg-white/20"
               >
                 {usuario.nombre}
               </button>
@@ -90,7 +90,7 @@ export default function Header() {
             </div>
           ) : (
             <>
-              <Link to="/usuarios/iniciar-sesion" className="text-sm font-medium text-slate-600 hover:text-brand-600">
+              <Link to="/usuarios/iniciar-sesion" className="text-sm font-medium text-slate-300 hover:text-brand-500">
                 Iniciar sesión
               </Link>
               <Link

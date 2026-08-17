@@ -21,7 +21,7 @@ export default function NavDropdown({ label, items }: { label: string; items: Na
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-1 text-sm font-medium text-slate-600 transition-colors hover:text-brand-600"
+        className="flex items-center gap-1 text-sm font-medium text-slate-300 transition-colors hover:text-brand-500"
       >
         {label}
         <svg
